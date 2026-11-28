@@ -64,6 +64,14 @@ jobs:
           fi
           echo "检测域名已配置：${DOMAIN}"
 
+      - name: Debug network
+        env:
+          DOMAIN: ${{ secrets.DOMAIN }}
+        run: |
+          getent ahosts "$DOMAIN" || echo "解析失败"
+          curl -4 -sS -m 15 -o /dev/null -w "IPv4 -> HTTP %{http_code}\n" "https://$DOMAIN/" || echo "IPv4 失败"
+          curl -6 -sS -m 15 -o /dev/null -w "IPv6 -> HTTP %{http_code}\n" "https://$DOMAIN/" || echo "IPv6 失败"
+
       - name: Run pipeline
         env:
           CHECK_WORKER: "https://${{ secrets.DOMAIN }}/check?sstp=vpn:vpn@"
