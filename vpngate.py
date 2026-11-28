@@ -684,6 +684,8 @@ def check_all(
                 results.append(future.result())
         except TimeoutError:
             log("CLOUDFLARE WORKER", f"整体检测超时（{cfg.deadline_s:.0f}s），未完成的节点按失败处理")
+              for r in worker_errors[:5]:
+        log("CLOUDFLARE WORKER", f"示例错误 {r['host']}:{r['port']} -> {r['error']}")
 
     timed_out = 0
     for future in pending:
