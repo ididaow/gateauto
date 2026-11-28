@@ -684,8 +684,6 @@ def check_all(
                 results.append(future.result())
         except TimeoutError:
             log("CLOUDFLARE WORKER", f"整体检测超时（{cfg.deadline_s:.0f}s），未完成的节点按失败处理")
-              for r in worker_errors[:5]:
-        log("CLOUDFLARE WORKER", f"示例错误 {r['host']}:{r['port']} -> {r['error']}")
 
     timed_out = 0
     for future in pending:
@@ -965,7 +963,9 @@ def main() -> None:
     worker_errors = [r for r in failed if r.get("worker_error")]
 
     log("CLOUDFLARE WORKER", f"成功 {len(success)}, 失败 {len(failed)}（Worker 异常 {len(worker_errors)}）, 用时 {elapsed:.1f}s")
-
+    for r in worker_errors[:5]:
+        log("CLOUDFLARE WORKER", f"示例错误 {r['host']}:{r['port']} -> {r['error']}")
+      
     if unique_nodes and not success and len(worker_errors) == len(unique_nodes):
         die("CLOUDFLARE WORKER", "检测 Worker 全部请求异常，本次不发布（保留上一次产物）")
 
