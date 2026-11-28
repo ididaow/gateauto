@@ -965,7 +965,7 @@ def main() -> None:
     log("CLOUDFLARE WORKER", f"成功 {len(success)}, 失败 {len(failed)}（Worker 异常 {len(worker_errors)}）, 用时 {elapsed:.1f}s")
     for r in worker_errors[:5]:
         log("CLOUDFLARE WORKER", f"示例错误 {r['host']}:{r['port']} -> {r['error']}")
-      
+
     if unique_nodes and not success and len(worker_errors) == len(unique_nodes):
         die("CLOUDFLARE WORKER", "检测 Worker 全部请求异常，本次不发布（保留上一次产物）")
 
